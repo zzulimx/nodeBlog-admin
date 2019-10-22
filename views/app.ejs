@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="shortcut icon" href="/img/ico/favico.ico">
+    <title>Node Blog</title>
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+        }
+        body{
+            background-color: #eee;
+            font: 14px Helvetica Neue,Helvetica,PingFang SC,\5FAE\8F6F\96C5\9ED1,Tahoma,Arial,sans-serif;
+        }
+        #lay-blog-wrapper{
+            position: relative;
+            min-height: 100%;
+            width: 100%;
+        }
+        .lay-blog-header{
+            width: 100%;
+            z-index: 99;
+            position: fixed;
+            top: 0;
+            background: #393D49;
+            height: 60px;
+        }
+        .lay-blog-header img{
+            width: 100px;
+            cursor: pointer;
+            vertical-align: initial;
+        }
+        .lay-blog-header .layui-form-item{
+            background: #fff;
+            margin-top: 2.5%;
+            border-radius: 4px;
+            border: 1px solid #d2d2d2;
+        }
+        .lay-blog-header .layui-col-md5 label{
+            float: right;
+            display: inline-block;
+            width: 36px;
+            height: 38px;
+            z-index: 9;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            border: 0;
+            text-align: center;
+            line-height: 40px;
+            font-size: 20px;
+            border-radius: 4px;
+        }
+        .lay-blog-header .layui-col-md5 .layui-input-block{
+            margin-left: 0;
+            border-radius: 4px;
+        }
+        .lay-blog-header .layui-col-md5 .layui-input-block input{
+            width: calc(100% - 36px);
+            border: 0;
+        }
+        .lay-blog-header .layui-col-md5 .layui-input-block input::placeholder{
+            color: #393d49;
+        }
+        #lay-nav{
+            width: 100%;
+            height: 60px;
+            color: #fff;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .lay-nav li {
+            display: inline-block;
+            float: left;
+            width: 33.3%;
+            height: 60px;
+            line-height: 60px;
+            text-align: center;
+            color: #d2d2d2;
+            cursor: pointer;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .lay-nav li:hover a{
+            color: #fff;
+            transition: color .3s linear;
+        }
+        .lay-nav li a{
+            color: #d2d2d2;
+        }
+        .lay-nav .layui-icon{
+            margin-right: 10px;
+            font-size: 25px;
+        }
+        .lay-nav .lay-active:after{
+            content:'';
+            position: absolute;
+            left:50%;
+            transform: translateX(-50%);
+            width: 80%;
+            bottom: 1px;
+            height: 2px;
+            background-color: #fff;
+        }
+        .lay-nav .lay-nav-bar{
+            position: absolute;
+            display: inline-block;
+            width: 0;
+            bottom: 1px;
+            height: 2px;
+            background-color: #fff;
+            opacity: 0;
+            left: 15.15%;
+            transition: all .2s ease;
+        }
+        .lay-nav-item a{
+            display:inline-block;
+        }
+        .lay-blog-main{
+            padding-top: 80px;
+            padding-bottom: 20px;
+        }
+        .lay-blog-main .layui-card{
+            padding: 10px;
+        }
+        .lay-blog-main .layui-card-header h2{
+            line-height: 52px;
+        }
+        .lay-blog-main .layui-card .layui-card-header  a:hover{
+            color: #000;
+            text-decoration: underline;
+        }
+        .lay-blog-main .layui-card-header{
+            height: auto;
+        }
+        .layui-card .layui-card-header p{
+            line-height: 25px;
+            color: #d2d2d2;
+        }
+        .lay-blog-main .layui-card .layui-card-header h2 a{
+            color: #555;
+            transition: all .3s ease;
+        }
+        .lay-blog-main .layui-card hr{
+            margin: 5px auto;
+        }
+        .lay-blog-main .layui-card-body a{
+            display: inline-block;
+            min-height: 150px;
+            max-height: 205px;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 7;
+            overflow: hidden;
+            line-height: 30px;
+            text-indent: 2em;
+            color: #555;
+            cursor: pointer;
+            transition: color .3s ease;
+        }
+        .layui-card-body a:hover{
+            color: #000;
+        }
+        .lay-blog-main .layui-card-footer{
+            padding:  10px ;
+        }
+        .view-time span{
+            font-size: 16px;
+            color: #999;
+        }
+        .comment-tool .leave-message{
+            font-size: 25px;
+            color: #999;
+            margin-left: 10px;
+            cursor: pointer;
+            transition: color .3s ease;
+        }
+        .comment-tool .message-share{
+            font-size: 25px;
+            color: #999;
+            margin-left: 20px;
+            cursor: pointer;
+            transition: color .3s ease;
+        }
+        .comment-tool .leave-message:hover, .comment-tool .message-share:hover{
+            color:#333;
+        }
+        .lay-blog-page{
+            padding-top: 10px;
+            padding-bottom: 20px;
+        }
+        #blogPage .layui-laypage{
+            margin-left: 50%;
+            transform: translateX(-50%);
+        }
+        .lay-blog-footer{
+            width: 100%;
+            height: 30px;
+            padding: 20px 0 25px 0;
+            background-color: #393D49;
+            text-align: center;
+        }
+        .lay-blog-footer p{
+            color: #F2F2F2;
+            line-height: 25px;
+        }
+        .layui-laypage:first-child  span {
+            background-color: unset;
+        }
+        #logo{
+            display: inline-block;
+        }
+        #android_nav{
+            display: none;
+        }
+        @media screen and (max-width: 480px){
+            #blogPage .layui-laypage{
+                margin-left: 0;
+                transform: translateX(0);
+            }
+            #search{
+                display: none;
+            }
+            #nav{
+                display: none;
+            }
+            #android_nav{
+                display: inline-block;
+                width: 220px;
+                float: right;
+                margin-right: 15px;
+            }
+            #android_container{
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="lay-blog-wrapper" id="lay-blog-wrapper">
+
+    <div class="lay-blog-header">
+        <div class="layui-container" id="android_container">
+            <div class="layui-row">
+                <div class="layui-col-md2 ">
+                    <a href="javascript:;" id="logo"><img src="/img/logo/logo.png" alt=""></a>
+                    <div id="android_nav">
+                        <ul class="lay-nav" id="lay-nav">
+                            <li class="lay-nav-item lay-active"><a href="app"><i class="layui-icon layui-icon-home"></i>首页</a></li>
+                            <li class="lay-nav-item"><a href="/comment"><i class="layui-icon layui-icon-reply-fill"></i>留言</a></li>
+                            <li class="lay-nav-item"><a href="/posts"><i class="layui-icon layui-icon-username"></i>后台</a></li>
+                            <span class="lay-nav-bar"></span>
+                        </ul>
+                    </div>
+                </div>
+                <div class="layui-col-md5 layui-col-md-offset1"  id="search">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label layui-icon layui-icon-search"></label>
+                        <div class="layui-input-block">
+                            <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入搜索内容" class="layui-input">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-col-md3 layui-col-md-offset1" id="nav">
+                   <ul class="lay-nav" id="lay-nav">
+                       <li class="lay-nav-item lay-active"><a href="app"><i class="layui-icon layui-icon-home"></i>首页</a></li>
+                       <li class="lay-nav-item"><a href="/comment"><i class="layui-icon layui-icon-reply-fill"></i>留言</a></li>
+                       <li class="lay-nav-item"><a href="/posts"><i class="layui-icon layui-icon-username"></i>后台</a></li>
+                       <span class="lay-nav-bar"></span>
+                   </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lay-blog-main">
+        <div class="layui-container">
+            <div class="layui-row">
+                <div class="layui-col-md8 layui-col-md-offset2" id="artWrapper">
+                    <%for(let i=0;i<(artNum);i++){%>
+                        <%-include('article',{article:articles[i]})%>
+                    <%}%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="lay-blog-page">
+        <div class="layui-container">
+            <div class="layui-row">
+                <div id="blogPage"></div>
+            </div>
+        </div>
+    </div>
+    <div class="lay-blog-footer" id="lay-blog-footer">
+        <p>@Node Blog 2019</p>
+        <p>郑州轻工业大学</p>
+    </div>
+</div>
+<script src="/frame/layui/layui.js"></script>
+<script>
+    layui.use(['element','form','jquery','laypage'],function () {
+        const element = layui.element;
+        const form = layui.form;
+        const $ = layui.jquery;
+        const laypage = layui.laypage;
+
+
+
+        let navArr = $('.lay-nav-item');
+        navArr=[...navArr];
+
+       // forEach 当前元素 当前元素索引 当前数组
+       navArr.forEach(function (item,index) {
+           navArr[index].onmouseover=function () {
+               $('.lay-nav-bar').css({
+                   'opacity':1,
+                   'left': (index * 33.3) +5+'%',
+                   'width':'24%'
+           })
+           };
+          navArr[index].onmouseleave=function () {
+              $('.lay-nav-bar').css({
+                  'opacity':0,
+                  'left': (index*33.3) +15.5+ '%',
+                  'width':0
+              })
+          }
+       })
+
+        //分页
+        //执行一个laypage实例
+        laypage.render({
+            elem: 'blogPage' //注意，这里的 test1 是 ID，不用加 # 号
+            ,count: '<%=countNum%>' //数据总数，从服务端得到
+            ,theme:'#393D49'
+            ,layout: ['count', 'prev', 'page', 'next', 'limit', 'skip']
+            ,jump: function(obj, first){
+                //首次不执行
+                if(!first){
+                    let data = {
+                        currPage:obj.curr,
+                        limit:obj.limit
+                    }
+                    $.ajax({
+                        type:'get'
+                        ,dataType:'html'
+                        ,data:data
+                        ,url:'/app'
+                        // ,async: false  //设置成同步
+                        ,success:function (res) {
+                            let articles = JSON.parse(res).articles;
+                            let artNum =  JSON.parse(res).artNum;
+                            let html ='';
+                           for(let i=0;i<artNum;i++){
+                               html += `<div class="layui-card">
+    <div class="layui-card-header">
+        <h2>
+            <a href="/app/${articles[i]._id}">${articles[i].title}</a>
+        </h2>
+        <p>发布于: <span>${articles[i].createdAt}</span></p>
+    </div>
+    <div class="layui-card-body">
+        <a href="/app/${articles[i]._id}">${articles[i].content}</a>
+    </div>
+    <hr>
+    <div class="layui-card-footer">
+        <div class="layui-row">
+            <div class="layui-col-md3">
+                <div class="view-time">
+                    <span>浏览<span>${articles[i].pv}</span>次</span>
+                </div>
+            </div>
+            <div class="layui-col-md2 layui-col-md-offset7">
+                <div class="comment-tool">
+                    <span class="layui-icon layui-icon-reply-fill leave-message"></span>
+                    <span class="layui-icon layui-icon-share message-share"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>`
+                           }
+                          $('#artWrapper').html(html);
+                        }
+
+                    })
+                }
+            }
+        });
+    })
+</script>
+</body>
+</html>

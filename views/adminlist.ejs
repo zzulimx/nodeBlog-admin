@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>node_blog</title>
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <style>
+        body{
+            padding-bottom: 100px;
+        }
+        #avatar-wrapper{
+            padding: 20px 65px;
+            height: 100px;
+
+        }
+        .avatar img{
+            height: 100px;
+            border-radius: 100%;
+            border:2px solid #d6d6d6 ;
+            margin-right: 30px;
+        }
+        .avatar span{
+            margin-right: 20px;
+        }
+        thead tr th .layui-table-cell{
+            height: 28px;
+            line-height: 28px;
+        }
+        .layui-table-cell{
+            height: 60px;
+            line-height: 60px;
+        }
+        .adminAvatar{
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            margin-top: 5px;
+        }
+        #editForm{
+            width: 97%;
+            margin-left: -10px;
+        }
+    </style>
+</head>
+<body>
+
+
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>管理员列表</legend>
+</fieldset>
+<div class="layui-card" >
+    <div class="layui-card-body">
+        <table id="adminlist" lay-filter="adminlist"></table>
+</div>
+</div>
+<script src="/frame/layui/layui.js"></script>
+<script >
+    //时间格式化函数
+    function timeTo(time){
+        let year = time.getFullYear();
+        let month = ('000'+(time.getMonth()+1)).slice(-2);
+        let date = ('000'+time.getDate()).slice(-2);
+        let hour = ('000'+time.getHours()).slice(-2);
+        let minu = ('000'+time.getMinutes()).slice(-2);
+        let sec = ('000'+time.getSeconds()).slice(-2);
+
+        let create_time = year + '-' + month + '-' + date +  '  ' + hour + ':' + minu + ':' + sec;
+        return create_time;
+    }
+    //JavaScript代码区域
+    layui.use(['element','jquery','form','table'], function(){
+        let element = layui.element;
+        let $ = layui.jquery;
+        let form=layui.form;
+        let table= layui.table;
+        // let layer = layui.layer;
+        let iframe= window.parent.document.getElementById('iframe');
+        //管理员列表
+        table.render({
+            elem: '#adminlist'
+            ,url: '/adminlist/listdata' //数据接口
+            ,request:{
+                limitName:'pageName',
+                pageName:'currPage'
+            }
+            ,toolbar:'default'
+            ,method:'get'
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {type: 'checkbox', fixed: 'left'}
+                ,{field: 'avatar', title: '用户头像',
+                    templet:function (d) {
+                    return '<img src=/img/'+ d.avatar +' '+ 'class="adminAvatar"'+'>';
+                     },width:100
+                }
+                ,{field: 'name', title: '用户名', }
+                ,{field: 'gender', title: '性别',templet:function (d) {
+                        if(d.gender==='m'){
+                            return "<div>男</div>"
+                        }else  if(d.gender === 'f'){
+                            return "<div>女</div>"
+                        }else{
+                            return "<div>隐私</div>"
+                        }
+                    }}
+                , {field: '_id', title: '创建时间',  sort: true, fixed: 'right',templet:function (d) {
+                        let create = new Date(parseInt(d._id.toString().substring(0, 8), 16) * 1000);
+                        return timeTo(create);
+                    }}
+            ]]
+            ,done:function () {
+                let bodyHeight=document.documentElement.scrollHeight || document.body.scrollHeight;
+                iframe.style.height=bodyHeight +'px';
+            }
+        });
+
+        //监听头工具栏事件
+        table.on('toolbar(adminlist)', function(obj){
+            var checkStatus = table.checkStatus(obj.config.id)
+                ,data = checkStatus.data; //获取选中的数据
+            switch(obj.event){
+                case 'add':
+                     // let iframe = window.parent.document.getElementsByTagName('iframe');
+                     // $(iframe).attr('src','/addadmin');
+                   let addadmin=window.parent.document.getElementsByClassName('navdom')[6];
+                   $(addadmin).click();
+                    $(window.parent.document).find('.navdom').removeClass('layui-this');
+                    $(addadmin).addClass('layui-this');
+                    break;
+                case 'update':
+                    if(data.length === 0){
+                        layer.msg('请选择一行',{
+                            offset:'100px'
+                        });
+                    } else if(data.length > 1){
+                        layer.msg('只能同时编辑一个',{
+                            offset:'100px'
+                        });
+                    } else {
+                      let index =layer.open({
+                          type:1
+                          ,title:'编辑'
+                          ,content:`
+                              <form class="layui-form" action="" id='editForm'>
+
+
+  <div class="layui-form-item">
+     <div id="avatar-wrapper">
+                <div class="avatar">
+                    <span>头像</span>
+                    <img class="avatar" src='/img/${data[0].avatar}' alt="">
+                    <button type="button" class="layui-btn-normal  layui-btn  layui-btn-sm lay-avatar-btn"><i class="layui-icon layui-icon-upload-drag"></i>选择图片</button>
+                    <input type="file" name="avatar" style="display: none" id="avatar_inp">
+                </div>
+            </div>
+<div class="layui-form-item" style="display:none">
+    <label class="layui-form-label">用户名</label>
+    <div class="layui-input-block">
+      <input type="text" name="currname" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input" value=${data[0].name}>
+    </div>
+  </div>
+<div class="layui-form-item">
+    <label class="layui-form-label">用户名</label>
+    <div class="layui-input-block">
+      <input type="text" name="name" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input" value=${data[0].name}>
+    </div>
+  </div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">密码</label>
+    <div class="layui-input-block">
+      <input type="password" name="password" required lay-verify="required" placeholder="请输入您要更改的密码" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+<div class="layui-form-item">
+    <label class="layui-form-label">确认密码</label>
+    <div class="layui-input-block">
+      <input type="password" name="repassword" required lay-verify="required" placeholder="请再次输入的密码" autocomplete="off" class="layui-input">
+    </div>
+  </div>
+ <div class="layui-form-item">
+    <label class="layui-form-label">选择框</label>
+    <div class="layui-input-block">
+      <select name="gender" lay-verify="required">
+        <option value="x">请选择性别</option>
+        <option value="m">男</option>
+        <option value="f">女</option>
+      </select>
+    </div>
+  </div>
+ <div class="layui-form-item">
+    <div class="layui-input-block">
+      <button type="button" class="layui-btn" lay-submit lay-filter="editAdmin">立即提交</button>
+      <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+    </div>
+  </div>
+</form>
+                          `
+                          ,offset:'100px'
+                          ,area:['500px','500px']
+                          ,success:function () {
+                            form.render('select');
+                              //上传头像
+                              $('.lay-avatar-btn').click(function () {
+                                  $('#avatar_inp').click();
+                              });
+                              //预览头像
+                              $('#avatar_inp').change(function () {
+
+                                  const files = event.target.files;
+                                  const file = files[0]; // 图片对象
+                                  const imageSize = file.size; //图片文件大小
+                                  const lastNo = file.name.lastIndexOf('.');
+                                  const imgNameExtension = file.name.substring(lastNo).toLowerCase(); //文件后缀名
+                                  const URL = window.URL || window.webkitURL;
+                                  let imgURL;
+                                  if (URL) {
+                                      imgURL = URL.createObjectURL(file)
+                                  }
+                                  if (imgURL) {
+                                      const img = new Image();
+                                      img.src = imgURL
+                                      img.onerror = function() {
+                                          layer.msg("您选择的文件有误，请重新选择!",{
+                                              icon:5
+                                          })
+                                      }
+                                      img.onload = function() {
+                                          $('.avatar').attr('src',imgURL);
+                                      }
+                                  }
+                              });
+                            let editForm= document.querySelector('#editForm');
+                            form.on('submit(editAdmin)',function (data) {
+                                if(data.field.password!==data.field.repassword){
+                                    return layer.msg('两次密码不一致！',{
+                                        icon:5,
+                                        offset:'100px'
+                                    })
+                                }
+                                if(data.field.password.length<6){
+                                    return layer.msg('密码不小于6位字符！',{
+                                        icon:5,
+                                        offset:'100px'
+                                    })
+                                }
+                                let formData = new FormData(editForm);
+                                $.ajax({
+                                    type:'post',
+                                    dataType:'json',
+                                    url:'/adminlist/editadmin',
+                                    contentType: false,    //不可缺
+                                    processData: false,    //不可缺
+                                    data:formData,
+                                    success:function (result) {
+                                        if(result === "修改成功"){
+                                            layer.msg(result,{
+                                                icon:6,
+                                                offset:'120px'
+                                            });
+                                            setTimeout(function () {
+                                                window.location.reload();
+                                            },1000)
+                                        }else{
+                                            layer.msg(result,{
+                                                icon:5,
+                                                offset:'120px'
+                                            })
+                                            setTimeout(function () {
+                                                window.location.reload();
+                                            },1000)
+                                        }
+                                    },
+                                    error:function (result) {
+                                        layer.msg(result,{
+                                            icon:5,
+                                            offset:'120px'
+                                        })
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        },1000)
+                                    }
+                                })
+                            })
+                          }
+                      })
+                        
+                    }
+                    break;
+                case 'delete':
+                    if(data.length === 0){
+                        layer.msg('请选择一行',{
+                            offset:'100px'
+                        });
+                    } else {
+                        let deleteData ={
+
+                        };
+                        data.forEach(function (item,index) {
+                            deleteData['name'+index]=item.name;
+                        })
+                        layer.confirm("您确定要删除这"+data.length+"位管理员吗？",{
+                            btn:['确定删除','取消'],
+                            offset:'150px'
+
+                        },function () {
+                        //    确定回调函数
+                             $.ajax({
+                                type:'post'
+                                ,dataType:'json'
+                                ,url:'/adminlist/deleteadmin'
+                                ,data:deleteData
+                                ,success:function (result) {
+                                    if(result==='删除成功'){
+                                        layer.msg(result,{
+                                            icon:6
+                                            ,offset:'120px'
+                                        })
+                                        setTimeout(function () {
+                                            window.location.reload();
+                                        },1000)
+                                    }
+                                }
+                                ,error:function (err) {
+                                    layer.msg(err,{
+                                        icon:5
+                                        ,offset:'120px'
+                                    })
+                                     setTimeout(function () {
+                                         window.location.reload();
+                                     },1000)
+                                }
+                            })
+
+                        },function () {
+                            //    取消回调函数
+                            layer.closeAll();
+                        })
+
+                    }
+                    break;
+            }
+        });
+    });
+</script>
+</body>
+</html>

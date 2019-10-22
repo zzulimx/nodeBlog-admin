@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>添加管理员</title>
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+
+    <style>
+        body{
+            padding-bottom: 100px;
+        }
+        .avatar input{
+            margin-top: 5px;
+        }
+         .layui-card-body{
+             padding-top: 30px;
+         }
+
+        .avatar_img{
+            display: inline-block;
+            width: 100px;
+            height: 100px;
+            border-radius: 100%;
+            border: 2px solid #eee;
+            margin-right: 15px;
+        }
+    </style>
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>添加管理员</legend>
+</fieldset>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form" enctype="multipart/form-data" autocomplete="off" method="post" role="form" id="upForm">
+            <div class="layui-form-item avatar">
+                <label class="layui-form-label" style="line-height: 100px">头像</label>
+                <div class="layui-input-block">
+                    <img src="" alt="" class="avatar_img">
+                    <button type="button" class="layui-btn-normal  layui-btn  layui-btn-sm " id="select_img"><i class="layui-icon layui-icon-upload-drag"></i>选择图片</button>
+                    <input type="file"  name="avatar" style="display: none">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux">注意大小写</div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">确认密码</label>
+                <div class="layui-input-inline">
+                    <input type="password" name="repassword" required lay-verify="required" placeholder="请再次输入密码" autocomplete="off" class="layui-input">
+                </div>
+                <div class="layui-form-mid layui-word-aux"></div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <select name="gender" lay-verify="required">
+                        <option value="m">男</option>
+                        <option value="f">女</option>
+                        <option value="x" selected>隐私</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button lay-submit class="layui-btn"  lay-filter="formDemo">立即添加</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+
+    </div>
+</div>
+<script src="/frame/layui/layui.js"></script>
+<script>
+    //控制显示高度
+    // bodyHeight();
+    layui.use(['form','jquery','element'], function(){
+        let form = layui.form;
+        let $= layui.jquery;
+        let element = layui.element;
+
+        let iframe= window.parent.document.getElementById('iframe');
+        iframe.style.height=document.body.clientHeight +'px';
+
+        $('#select_img').click(function () {
+            $('input[name=avatar]').click();
+        })
+        //预览头像
+        $('input[name=avatar]').change(function () {
+
+            const files = event.target.files;
+            const file = files[0]; // 图片对象
+            const imageSize = file.size; //图片文件大小
+            const lastNo = file.name.lastIndexOf('.');
+            const imgNameExtension = file.name.substring(lastNo).toLowerCase(); //文件后缀名
+            const URL = window.URL || window.webkitURL;
+            let imgURL;
+            if (URL) {
+                imgURL = URL.createObjectURL(file)
+            }
+            if (imgURL) {
+                const img = new Image();
+                img.src = imgURL
+                img.onerror = function() {
+                    layer.msg("您选择的文件有误，请重新选择!",{
+                        icon:5
+                    })
+                }
+                img.onload = function() {
+                    $('.avatar_img').attr('src',imgURL);
+                }
+            }
+        })
+
+
+        let upform=document.querySelector("#upForm");
+        form.on('submit(formDemo)', function(data){
+
+           var formData = new FormData(upform);
+            $.ajax({
+                type:'post',
+                dataType:'json',
+                data:formData,
+                url:'../addadmin',
+                contentType: false,    //不可缺
+                processData: false,    //不可缺
+                success:function (result) {
+                   if(result==='添加成功'){
+                       layer.msg(result,{
+                           icon:6
+                       });
+                       setTimeout(function () {
+                           top.location.reload();
+                       },1000)
+                   }else{
+                       layer.msg(result);
+                   }
+                },
+                error:function () {
+                    layer.msg("添加失败，请重试！");
+                    window.location.reload();
+                }
+
+            })
+            return false;
+        });
+    });
+</script>
+</body>
+</html>

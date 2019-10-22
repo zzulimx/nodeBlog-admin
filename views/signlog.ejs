@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>node_blog</title>
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <style>
+        body{
+            padding-bottom: 100px;
+        }
+        #avatar-wrapper{
+            padding: 20px 65px;
+            height: 100px;
+
+        }
+        .avatar img{
+            height: 100px;
+            border-radius: 100%;
+            border:2px solid #d6d6d6 ;
+            margin-right: 30px;
+        }
+        .avatar span{
+            margin-right: 20px;
+        }
+        thead tr th .layui-table-cell{
+            height: 28px;
+            line-height: 28px;
+        }
+        .layui-table-cell{
+            height: 60px;
+            line-height: 60px;
+        }
+        .adminAvatar{
+            display: inline-block;
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+
+
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>登录日志</legend>
+</fieldset>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table id="logslist" lay-filter="logslist"></table>
+    </div>
+</div>
+<script src="/frame/layui/layui.js"></script>
+<script >
+//时间格式化函数
+function timeTo(time){
+    let year = time.getFullYear();
+    let month =('000'+( time.getMonth()+1)).slice(-2);
+    let date = time.getDate();
+    let hour = ('000'+time.getHours()).slice(-2);
+    let minu = ('000'+time.getMinutes()).slice(-2);
+    let sec = ('000'+time.getSeconds()).slice(-2);
+    let create_time = year + '-' + month + '-' + date +  '  ' + hour + ':' + minu + ':' + sec;
+    return create_time;
+}
+    //JavaScript代码区域
+    layui.use(['element','jquery','form','table'], function(){
+        let element = layui.element;
+        let $ = layui.jquery;
+        let form=layui.form;
+        let table= layui.table;
+
+        let iframe= window.parent.document.getElementById('iframe');
+        // console.log(bodyHeight)
+
+
+        //管理员列表
+        table.render({
+            elem: '#logslist'
+            ,url: '/signlog/logslist' //数据接口
+            ,page: true //开启分
+            ,request:{
+                limitName:'pageName',
+                pageName:'currPage'
+            }
+            ,cols: [[ //表头
+                {field: 'avatar', title: '用户头像' ,
+                    templet:function (d) {
+                        return '<img src=/img/'+ d.avatar +' '+ 'class="adminAvatar"'+'>';
+                    },width:100}
+                    , {field: '_id', title: 'ID',  sort: true}
+                ,{field: 'user', title: '用户名', }
+                ,{field: 'createdAt', title:'登陆时间',templet:function(d){
+                    let login_time = new Date(d.createdAt);
+                      return timeTo(login_time);
+                    },sort: true}
+            ]]
+            ,done:function () {
+                let bodyHeight=document.documentElement.scrollHeight || document.body.scrollHeight;
+                iframe.style.height=bodyHeight +'px';
+            }
+        });
+    });
+</script>
+</body>
+</html>

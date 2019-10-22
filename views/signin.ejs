@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <title>登录</title>
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            height: 100%;
+            width: 100%;
+            overflow-y:hidden;
+        }
+        #node-admin-login{
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background: #f2f2f2;
+            padding: 110px 0;
+        }
+        .admin-login-main{
+            margin: 0 auto;
+            width: 375px;
+            box-sizing: border-box;
+        }
+        .admin-login-main .admin-login-header{
+            text-align: center;
+            padding: 20px;
+        }
+        .admin-login-header h2{
+            margin-bottom: 10px;
+            font-weight: 400;
+            font-size: 30px;
+            color: #000;
+        }
+        .admin-login-header p{
+            font-weight: 300;
+            color: #999;
+        }
+        .admin-login-main .admin-login-body{
+            padding: 20px;
+        }
+        .admin-login-body .layui-form-label{
+            padding: 0;
+            width: 38px;
+            border:none;
+            border-right: 0;
+            background: #fff;
+            height: 38px;
+            color: #d2d2d2;
+            text-align: center;
+            line-height: 36px;
+        }
+        .admin-login-body .layui-input-block{
+            margin-left: 38px;
+        }
+        .admin-login-body .layui-form-item:hover{
+            border: 1px solid #d6d6d6;
+        }
+        .admin-login-body .layui-form-item:focus-within{
+            border: 1px solid #d6d6d6;
+        }
+        .admin-login-body .layui-form-item{
+            border: 1px solid #e6e6e6;
+        }
+        .admin-login-body .layui-input-block input{
+            border: none;
+            transition: unset;
+            padding-left: 0;
+        }
+        .admin-login-body .layui-input-block input::placeholder{
+            color: #d2d2d2;
+        }
+        button[lay-filter=login]{
+            width: 100%;
+        }
+        .admin-login-footer{
+            padding: 20px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            text-align: center;
+            color:rgba(0,0,0,0.5) ;
+            box-sizing: border-box;
+            line-height: 30px;
+        }
+        .admin-login-footer p a{
+            color:rgba(28,103,199,0.5) ;
+        }
+        .admin-login-footer p a:hover{
+            color: #333;
+        }
+        .lay-gengrate-code{
+            margin-bottom: 15px;
+        }
+        .lay-gengrate-code .lay-code-inp input{
+            border: 1px solid #e2e2e2;
+            background: #fff;
+            height: 38px;
+            padding-left: 40px;
+            width: calc(100% - 42px);
+        }
+        .lay-code-label{
+            position: absolute;
+            left: 1px;
+            top: 1px;
+            width: 38px;
+            height: 38px;
+            line-height: 36px;
+            text-align: center;
+            color: #d2d2d2;
+        }
+        .lay-code-inp input::placeholder{
+            color: #d2d2d2;
+        }
+        .lay-code-inp input:focus, .lay-code-inp input:hover{
+            border-color: #d2d2d2;
+        }
+        #v_container{
+            width: calc(100% - 10px);
+            height: 40px;
+            padding-left: 10px;
+            box-sizing: border-box;
+        }
+        @media screen  and (max-width: 480px){
+            .admin-login-main{
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="node-admin-login" id="node-admin-login">
+    <div class="admin-login-main">
+            <div class="admin-login-main admin-login-header">
+                <h2>Node Blog</h2>
+                <p>Node Blog 后台管理系统登录</p>
+            </div>
+        <div class="admin-login-main admin-login-body layui-form">
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-icon layui-icon-username"></label>
+                <div class="layui-input-block">
+                    <input type="text" name="name"  placeholder="用户名" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label layui-icon layui-icon-password"></label>
+                <div class="layui-input-block">
+                    <input type="password" name="password"  placeholder="密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="lay-gengrate-code layui-row">
+                <div class="lay-code-inp layui-col-xs7">
+                    <label for="code_input" class="lay-code-label  layui-icon layui-icon-vercode"></label>
+                    <input type="text" id="code_input" value="" placeholder="图形验证码"/>
+                </div>
+                <div class="lay-code-box layui-col-xs5">
+                    <div id="v_container"></div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <button type="button" class="layui-btn" lay-submit lay-filter="login">登录</button>
+            </div>
+        </div>
+
+    </div>
+    <div class="admin-login-footer">
+        <p><a href="/app"><i class="layui-icon layui-icon-link"></i>&nbsp; 前台博客</a></p>
+        <p>@2019 Node Blog郑州轻工业大学</p>
+    </div>
+</div>
+</body>
+<script src="/frame/layui/layui.js"></script>
+<script src="/js/generateCode.js"></script>
+<script>
+
+
+
+    //验证码
+    let verifyCode = new GVerify("v_container");
+
+
+    layui.use(['element','jquery','form'], function(){
+        let element = layui.element;
+        let $ = layui.jquery;
+        let form = layui.form;
+
+
+        //手机端判断软键盘
+        var clientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+        if(clientHeight<900){
+            $(window).on('resize', function () {
+                var nowClientHeight = document.documentElement.clientHeight || document.body.clientHeight;
+                if (clientHeight > nowClientHeight) {
+                    //键盘弹出的事件处理
+                    $('.admin-login-footer').css('display','none');
+                }
+                else {
+                    //键盘收起的事件处理
+                    $('.admin-login-footer').css('display','block');
+                }
+            });
+        }
+        form.on('submit(login)',function (data) {
+            let res = verifyCode.validate(document.getElementById("code_input").value);
+            if(res){
+                $.ajax({
+                    type:'post',
+                    dataType:'json',
+                    data:data.field,
+                    url:'/signin',
+                    success:function (result) {
+                        if(result === '登录成功！'){
+                            layer.msg(result,{
+                                icon:6
+                            });
+                            setTimeout(function () {
+                                window.location.href='/posts';
+                            },1000);
+                        }else{
+                            layer.msg(result,{
+                                icon:5
+                            })
+                            setTimeout(function () {
+                                window.location.reload();
+                            },1000);
+                        }
+                    },
+                    error:function (err) {
+                        layer.msg('登陆失败');
+                        console.log(err)
+                        // setTimeout(function () {
+                        //     window.location.reload();
+                        // },1000);
+                    }
+                })
+
+            }else{
+                layer.msg("验证码有误",{
+                    offset:'50px',
+                    icon:5
+                })
+            }
+        })
+    });
+</script>
+</html>

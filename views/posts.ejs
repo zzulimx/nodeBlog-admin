@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Node Blog后台管理</title>
+    <link rel="shortcut icon" href="/img/ico/favico.ico">
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/posts.css">
+</head>
+<body class="layui-layout-body">
+<div class="layui-layout layui-layout-admin">
+    <div class="layui-header">
+        <div class="layui-logo">Blog Admin</div>
+        <div class="android_nav android_logo" id="andriod_nav"><i class="layui-icon layui-icon-spread-left" id="andrion_logo"></i>Blog Admin</div>
+        <!-- 头部区域（可配合layui已有的水平导航） -->
+        <ul class="layui-nav layui-layout-left">
+            <li class="layui-nav-item"><a href="/app">前台主页</a></li>
+        </ul>
+        <ul class="layui-nav layui-layout-right">
+            <li class="layui-nav-item">
+                <a href="javascript:;">
+                    <img src=<%='img/'+avatar%> class="layui-nav-img">
+                    <%=name%>
+                </a>
+                <dl class="layui-nav-child">
+                    <dd><a href="javascript:;" id="admin-info">基本资料</a></dd>
+                    <dd class="android_nav"><a href="/app" id="admin-info">前台主页</a></dd>
+                </dl>
+            </li>
+            <li class="layui-nav-item"><a href="/signout">退出</a></li>
+        </ul>
+    </div>
+    <div class="layui-side layui-bg-black">
+        <div class="layui-side-scroll">
+            <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
+            <ul class="layui-nav layui-nav-tree"  lay-filter="test">
+                <li class="layui-nav-item layui-nav-itemed" >
+                    <a href="javascript:;"><i class="layui-icon layui-icon-set"></i>系统设置</a>
+                    <dl class="layui-nav-child">
+                        <dd class="layui-this navdom"><a href="javascript:;">网站设置</a></dd>
+                        <dd class="navdom"><a href="javascript:;">登录日志</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item" id="user">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-user"></i>用户设置</a>
+                    <dl class="layui-nav-child">
+                        <dd class="navdom"><a href="javascript:;">用户信息</a></dd>
+                        <dd class="navdom"><a href="javascript:;">修改密码</a></dd>
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-file" ></i>文章管理</a>
+                    <dl class="layui-nav-child">
+                        <dd class="navdom"><a href="javascript:;">新增文章</a></dd>
+                        <dd class="navdom"><a href="javascript:;">查看文章</a></dd>
+                        <!--<dd class="navdom"><a href="javascript:;">评论管理</a></dd>-->
+                        <!--<dd class="navdom"><a href="javascript:;">分类管理</a></dd>-->
+                    </dl>
+                </li>
+                <li class="layui-nav-item">
+                    <a href="javascript:;"><i class="layui-icon layui-icon-auz"></i>权限控制</a>
+                    <dl class="layui-nav-child">
+                        <dd class="navdom"><a href="javascript:;">添加管理员</a></dd>
+                        <dd class="navdom"><a href="javascript:;">管理员列表</a></dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="layui-body" id="lay-body">
+        <!-- 内容主体区域 -->
+        <div id="frame_wrapper">
+            <iframe src="/webinfo" frameborder="0" style="width: 100%;height: 100%" scrolling="no" id="iframe"></iframe>
+        </div>
+    </div>
+    <div class="layui-footer">
+        <!-- 底部固定区域 -->
+        © node_blog - 底部固定区域
+    </div>
+</div>
+<script src="/frame/layui/layui.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use(['element','jquery','layer','form'], function(){
+        let element = layui.element;
+        let $ = layui.jquery;
+        let layer = layui.layer;
+        let form = layui.form;
+
+        //手机端导航
+        $('#andriod_nav').click(function () {
+            if( $(' .layui-layout-admin .layui-side').width()==='0px'||$(' .layui-layout-admin .layui-side').width()===0){
+                $(' .layui-layout-admin .layui-side').css('width','200px');
+                setTimeout(function () {
+                    $('#andrion_logo').attr('class','layui-icon layui-icon-shrink-right');
+                },500)
+            }else {
+                $(' .layui-layout-admin .layui-side').css('width','0px');
+                setTimeout(function () {
+                    $('#andrion_logo').attr('class','layui-icon layui-icon-spread-left');
+                },500)
+            }
+        })
+
+        //导航目录
+        let routeArr = [
+            '/webinfo',
+            '/signlog',
+            '/userinfo',
+            '/repassword',
+            '/addart',
+            '/artview',
+            // '/commentmange',
+            // '/assortmange',
+            '/addadmin',
+            '/adminlist'
+        ];
+        //切换导航
+        let navArr = $('.navdom');
+        navArr = [...navArr];
+        navArr .forEach((curNode,index)=>{
+           $(curNode).click(()=>{
+              $('iframe').attr('src',routeArr[index]);
+           })
+       });
+        $('#admin-info').click(function () {
+            adminInfo();
+        });
+
+
+
+        //用户信息弹出层
+        function adminInfo() {
+            let index1 = layer.open({
+                type:1,
+                title:'管理员信息',
+                content:`              <form class="layui-form form-admin-info" action="" role="form">
+     <div class="layui-form-item">
+<label class="layui-form-label" >用户名</label>
+<div class="layui-input-inline">
+<input type="text" name="name" readonly value=<%=name%> class="layui-input">
+</div>
+</div>
+  <div class="layui-form-item">
+    <label class="layui-form-label">性别</label>
+    <div class="layui-input-inline">
+      <input type="text" name="gender" readonly  class="layui-input" value=<%=gender%> id=gender>
+    </div>
+  </div>
+                                </form>`,
+                success:function () {
+                    let gender_inp = $('#gender');
+                    if(gender_inp.val()==='m'){
+                        $(gender_inp).val("男")
+                    }else if(gender_inp.val() === 'f'){
+                        $(gender_inp).val("女")
+                    }else {
+                        $(gender_inp).val("隐私")
+                    }
+                }
+            })
+        }
+    });
+</script>
+</body>
+</html>

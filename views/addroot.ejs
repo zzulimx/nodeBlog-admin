@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <link rel="shortcut icon" href="/img/ico/favico.ico">
+    <title>超级管理员</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        html,body{
+            width: 100%;
+            height: 100%;
+            background-color: #eee;
+            line-height: 24px;
+            font: 14px Helvetica Neue,Helvetica,PingFang SC,Tahoma,Arial,sans-serif;
+        }
+        #root{
+            padding-top: 100px ;
+            padding-left:20px  ;
+            padding-bottom: 0;
+            padding-right: 20px;
+        }
+        .lay-root-header {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .lay-root-header h2{
+            line-height: 25px;
+            padding: 5px;
+            font-weight: 500;
+            font-size: 25px;
+            letter-spacing: 2px;
+        }
+        .lay-root-header p{
+            line-height: 20px;
+            padding: 5px;
+            color: #888;
+        }
+        .root_img{
+            width: 50px;
+            height: 50px;
+            border-radius: 100%;
+            border: 2px solid #fff;
+        }
+        #select_img{
+            margin-left: 10px;
+        }
+        .root-footer{
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding-bottom: 10px;
+        }
+        .root-footer p{
+            padding: 5px;
+        }
+        #root form input {
+            border:none;
+
+        }
+        .layui-input-block{
+            margin-left: 38px;
+        }
+        .layui-form-item{
+            border: 1px solid #ddd;
+        }
+        .layui-form-item:last-child,.layui-form-item:first-child{
+            border: none;
+        }
+        #root form label{
+            display: inline-block;
+            width: 38px;
+            height: 38px;
+            background-color: #fff;
+            padding: 0;
+            line-height: 40px;
+            text-align: center;
+            color: #aaa;
+        }
+        .layui-form-mid.layui-word-aux{
+            line-height: 40px;
+        }
+        .layui-form-item.avatar{
+            padding-left: 55px;
+        }
+        #root .btn{
+            margin-left: 28%;
+        }
+        #root .layui-input-block input::placeholder{
+            color: #aaa;
+        }
+        @media screen and (max-width: 450px){
+            .layui-form-item .layui-input-inline {
+                display: inline-block;
+                margin-left: 10px;
+            }
+            .layui-form-item .layui-input-inline+.layui-form-mid {
+               margin-left: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="layui-container">
+    <div class="layui-row">
+       <div class="layui-col-md4 layui-col-lg-offset4">
+           <div id="root">
+           <div class="lay-root-header">
+               <h2>超级管理员</h2>
+               <p>NODE BLOG</p>
+           </div>
+           <div class="lay-root-main">
+               <form class="layui-form" action="" id="rootForm">
+                   <div class="layui-form-item avatar">
+                       <div class="layui-input-inline">
+                           <img src="" alt="" class="root_img">
+                           <button type="button" class="layui-btn-normal  layui-btn  layui-btn-sm " id="select_img"><i class="layui-icon layui-icon-upload-drag"></i>选择图片</button>
+                           <input type="file"  name="avatar" style="display: none">
+                       </div>
+                       <div class="layui-form-mid layui-word-aux">头像</div>
+                   </div>
+                   <div class="layui-form-item">
+                       <label class="layui-form-label layui-icon layui-icon-username"></label>
+                       <div class="layui-input-block">
+                           <input type="text" name="name" required  lay-verify="required" placeholder="请输入用户名" autocomplete="off" class="layui-input">
+                       </div>
+                   </div>
+                   <div class="layui-form-item">
+                       <label class="layui-form-label layui-icon layui-icon-senior"></label>
+                       <div class="layui-input-block">
+                           <select name="gender" lay-verify="required">
+                               <option value="m">男</option>
+                               <option value="f">女</option>
+                               <option value="x" selected>隐私</option>
+                           </select>
+                       </div>
+                   </div>
+                   <div class="layui-form-item">
+                       <label class="layui-form-label layui-icon layui-icon-password"></label>
+                       <div class="layui-input-block">
+                           <input type="password" name="password" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                       </div>
+                   </div>
+                   <div class="layui-form-item">
+                       <label class="layui-form-label  layui-icon layui-icon-password"></label>
+                       <div class="layui-input-block">
+                           <input type="password" name="repassword" required lay-verify="required" placeholder="请输入密码" autocomplete="off" class="layui-input">
+                       </div>
+                   </div>
+                   <div class="layui-form-item">
+                       <div class="layui-input-block btn">
+                           <button type="button" lay-submit class="layui-btn"  lay-filter="addroot">立即添加</button>
+                           <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                       </div>
+                   </div>
+               </form>
+           </div>
+         </div>
+       </div>
+    </div>
+</div>
+<div class="root-footer">
+    <p><a href="">前台博客</a></p>
+    <p>@2019 Node Blog郑州轻工业大学</p>
+</div>
+<script src="/frame/layui/layui.js"></script>
+<script>
+    layui.use(['element','form','jquery'],function () {
+        let element = layui.element;
+        let form = layui.form;
+        let $=layui.jquery;
+
+        //监听提交
+        $('#select_img').click(function () {
+            $('input[name=avatar]').click();
+        })
+        //预览头像
+        $('input[name=avatar]').change(function () {
+
+            const files = event.target.files;
+            const file = files[0]; // 图片对象
+            const imageSize = file.size; //图片文件大小
+            const lastNo = file.name.lastIndexOf('.');
+            const imgNameExtension = file.name.substring(lastNo).toLowerCase(); //文件后缀名
+            const URL = window.URL || window.webkitURL;
+            let imgURL;
+            if (URL) {
+                imgURL = URL.createObjectURL(file)
+            }
+            if (imgURL) {
+                const img = new Image();
+                img.src = imgURL
+                img.onerror = function() {
+                    layer.msg("您选择的文件有误，请重新选择!",{
+                        icon:5
+                    })
+                }
+                img.onload = function() {
+                    $('.root_img').attr('src',imgURL);
+                }
+            }
+        })
+        let rootForm =document.querySelector('#rootForm');
+        form.on('submit(addroot)',function (data) {
+            if(data.field.password!==data.field.repassword){
+                return layer.msg('两次密码不一致');
+            }
+            let formData = new FormData(rootForm);
+
+            $.ajax({
+                type:'post',
+                dataType:'json',
+                data:formData,
+                url:'/addroot',
+                contentType: false,    //不可缺
+                processData: false,    //不可缺
+                success:function (result) {
+                    if(result==='添加成功'){
+                        layer.msg(result,{
+                            icon:6
+                        });
+                        setTimeout(function () {
+                            window.location.reload();
+                        },1000)
+                    }else{
+                        layer.msg(result);
+                    }
+                },
+                error:function () {
+                    layer.msg("添加失败，请重试！");
+                    setTimeout(function () {
+                        window.location.reload();
+                    },1000)
+                }
+
+            })
+            return false;
+        });
+    })
+</script>
+</body>
+</html>

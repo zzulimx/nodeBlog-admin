@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>添加文章</title>
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <style>
+        .layui-card-body{
+            padding-top: 30px;
+        }
+        .layui-card-body textarea{
+            min-height: 400px;
+        }
+    </style>
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>文章列表</legend>
+</fieldset>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <table id="articlelist" lay-filter="articleList"></table>
+    </div>
+</div>
+<script src="frame/layui/layui.js"></script>
+<script>
+    //时间格式化函数
+    function timeTo(time){
+        let year = time.getFullYear();
+        let month =('000'+( time.getMonth()+1)).slice(-2);
+        let date = time.getDate();
+        let hour = ('000'+time.getHours()).slice(-2);
+        let minu = ('000'+time.getMinutes()).slice(-2);
+        let sec = ('000'+time.getSeconds()).slice(-2);
+        let create_time = year + '-' + month + '-' + date +  '  ' + hour + ':' + minu + ':' + sec;
+        return create_time;
+    }
+    layui.use(['element','jquery','form','table'], function(){
+        let element = layui.element;
+        let $ = layui.jquery;
+        let form=layui.form;
+        let table= layui.table;
+
+
+        let iframe= window.parent.document.getElementById('iframe');
+        //管理员列表
+        table.render({
+            elem: '#articlelist'
+            ,url: '/artview/view' //数据接口
+            ,request:{
+                limitName:'pageName',
+                pageName:'currPage'
+            }
+            ,method:'get'
+            ,page: true //开启分页
+            ,cols: [[ //表头
+                {field: 'createAdmin', title: '创建用户', fixed: 'left'}
+                ,{field: 'title', title: '文章标题', }
+                ,{field: 'content', title: '正文'}
+                ,{field:'createdAt',title:'创建时间',templet:function (d) {
+                        let create_time = new Date(d.createdAt);
+                        return timeTo(create_time)
+                    }}
+                ,{field:'pv',title:'访问次数'}
+
+            ]]
+            ,done:function () {
+                let bodyHeight=document.documentElement.scrollHeight || document.body.scrollHeight;
+                iframe.style.height=bodyHeight +100+'px';
+            }
+        });
+
+    });
+</script>
+</body>
+</html>

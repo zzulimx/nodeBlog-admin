@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>评论</title>
+    <link rel="shortcut icon" href="../public/img/ico/favico.ico">
+    <link rel="stylesheet" href="../public/frame/layui/css/layui.css">
+</head>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    body{
+        background-color: #eee;
+        font: 14px Helvetica Neue,Helvetica,PingFang SC,\5FAE\8F6F\96C5\9ED1,Tahoma,Arial,sans-serif;
+    }
+    #lay-blog-wrapper{
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+    }
+    .lay-blog-header{
+        background: #393D49;
+        height: 60px;
+    }
+    .lay-blog-header img{
+        width: 100px;
+        cursor: pointer;
+    }
+    .lay-blog-header .layui-form-item{
+        background: #fff;
+        margin-top: 2.5%;
+        border-radius: 4px;
+        border: 1px solid #d2d2d2;
+    }
+    .lay-blog-header .layui-col-md5 label{
+        float: right;
+        display: inline-block;
+        width: 36px;
+        height: 38px;
+        z-index: 9;
+        cursor: pointer;
+        padding: 0;
+        margin: 0;
+        border: 0;
+        text-align: center;
+        line-height: 40px;
+        font-size: 20px;
+        border-radius: 4px;
+    }
+    .lay-blog-header .layui-col-md5 .layui-input-block{
+        margin-left: 0;
+        border-radius: 4px;
+    }
+    .lay-blog-header .layui-col-md5 .layui-input-block input{
+        width: calc(100% - 36px);
+        border: 0;
+    }
+    .lay-blog-header .layui-col-md5 .layui-input-block input::placeholder{
+        color: #393d49;
+    }
+    #lay-nav{
+        width: 100%;
+        height: 60px;
+        color: #fff;
+        position: relative;
+        box-sizing: border-box;
+    }
+    .lay-nav li{
+        display: inline-block;
+        float: left;
+        width: 33.3%;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        color: #d2d2d2;
+        cursor: pointer;
+        box-sizing: border-box;
+        position: relative;
+    }
+    .lay-nav li:hover a{
+        color: #fff;
+        transition: color .3s linear;
+    }
+    .lay-nav li a{
+        color: #d2d2d2;
+    }
+    .lay-nav .layui-icon{
+        margin-right: 10px;
+        font-size: 25px;
+    }
+    .lay-nav .lay-active:after{
+        content:'';
+        position: absolute;
+        left:50%;
+        transform: translateX(-50%);
+        width: 80%;
+        bottom: 1px;
+        height: 2px;
+        background-color: #fff;
+    }
+    .lay-nav .lay-nav-bar{
+        position: absolute;
+        display: inline-block;
+        width: 0;
+        bottom: 1px;
+        height: 2px;
+        background-color: #fff;
+        opacity: 0;
+        left: 15.15%;
+        transition: all .2s ease;
+    }
+</style>
+<body>
+<div class="lay-blog-wrapper" id="lay-blog-wrapper">
+<div class="lay-blog-header">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md2 ">
+                <a href="javascript:;"><img src="../public/img/logo/logo.png" alt=""></a>
+            </div>
+            <div class="layui-col-md5 layui-col-md-offset1" >
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-icon layui-icon-search"></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" lay-verify="title" autocomplete="off" placeholder="请输入搜索内容" class="layui-input">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md3 layui-col-md-offset1">
+                <ul class="lay-nav" id="lay-nav">
+                    <li class="lay-nav-item"><a href="app.ejs"><i class="layui-icon layui-icon-home"></i>首页</a></li>
+                    <li class="lay-nav-item lay-active"><a href="comment.ejs"><i class="layui-icon layui-icon-reply-fill"></i>留言</a></li>
+                    <li class="lay-nav-item"><a href="./About.html"><i class="layui-icon layui-icon-username"></i></a></li>
+                    <span class="lay-nav-bar"></span>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<script src="../public/frame/layui/layui.js"></script>
+<script>
+    layui.use(['element','form','jquery'],function () {
+        const element = layui.element;
+        const form = layui.form;
+        const $ = layui.jquery;
+
+        let navArr = $('.lay-nav-item');
+        navArr=[...navArr];
+
+        // forEach 当前元素 当前元素索引 当前数组
+        navArr.forEach(function (item,index) {
+            navArr[index].onmouseover=function () {
+                $('.lay-nav-bar').css({
+                    'opacity':1,
+                    'left': (index * 33.3) +5+'%',
+                    'width':'24%'
+                })
+            };
+            navArr[index].onmouseleave=function () {
+                $('.lay-nav-bar').css({
+                    'opacity':0,
+                    'left': (index*33.3) +15.5+ '%',
+                    'width':0
+                })
+            }
+        })
+    })
+</script>
+</body>
+</html>

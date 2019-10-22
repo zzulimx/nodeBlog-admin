@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>node_blog</title>
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <style>
+        body{
+            padding-bottom: 100px;
+        }
+        #avatar-wrapper{
+           padding: 20px 65px;
+           height: 100px;
+
+        }
+        .avatar img{
+            height: 100px;
+            width: 100px;
+            border-radius: 100%;
+            border:2px solid #d6d6d6 ;
+            margin-right: 30px;
+        }
+        .avatar span{
+            margin-right: 20px;
+        }
+        @media screen and (max-width: 480px){
+            #avatar-wrapper {
+                padding: 20px 0px 20px 25px;
+            }
+            .avatar img{
+                margin-right: 20px;
+            }
+            .layui-form-label {
+                width: 50px;
+            }
+            .layui-input-block{
+                margin-left: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>用户信息</legend>
+</fieldset>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form form-admin-info" method="post" role="form" enctype="multipart/form-data" id="editForm" >
+            <div id="avatar-wrapper">
+                <div class="avatar">
+                    <span>头像</span>
+                    <img class="avatar" src=<%='img/'+avatar%> alt="">
+                    <button type="button" class="layui-btn-normal  layui-btn  layui-btn-sm lay-avatar-btn"><i class="layui-icon layui-icon-upload-drag"></i>选择图片</button>
+                    <input type="file" name="avatar" style="display: none" id="avatar_inp">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label" >用户名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" value=<%=name%> class="layui-input" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">性别</label>
+                <div class="layui-input-block">
+                    <input type="text" name="gender" value=<%=gender%> class="layui-input" id="gender" autocomplete="off">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button type="button" class="layui-btn layui-btn-primary" id="edit">编辑</button>
+                    <button type="button" class="layui-btn layui-btn-danger" lay-submit lay-filter="editinfo" >确认修改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script src="/frame/layui/layui.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use(['element','jquery','form'], function(){
+        let element = layui.element;
+        let $ = layui.jquery;
+        let form=layui.form;
+        //控制显示宽高
+        let iframe= window.parent.document.getElementById('iframe');
+        iframe.style.height=document.body.clientHeight +'px';
+
+        let gender_inp = $('#gender');
+        if(gender_inp.val()==='m'){
+            $(gender_inp).val("男")
+        }else if(gender_inp.val() === 'f'){
+            $(gender_inp).val("女")
+        }else {
+            $(gender_inp).val("隐私")
+        }
+
+        //编辑信息
+        $('#edit').click(function () {
+            $('input[name=name]').val('');
+            $(gender_inp).val('');
+        });
+        //上传头像
+        $('.lay-avatar-btn').click(function () {
+            $('#avatar_inp').click();
+        });
+        //预览头像
+        $('#avatar_inp').change(function () {
+
+            const files = event.target.files;
+            const file = files[0]; // 图片对象
+            const imageSize = file.size; //图片文件大小
+            const lastNo = file.name.lastIndexOf('.');
+            const imgNameExtension = file.name.substring(lastNo).toLowerCase(); //文件后缀名
+            const URL = window.URL || window.webkitURL;
+            let imgURL;
+            if (URL) {
+                imgURL = URL.createObjectURL(file)
+            }
+            if (imgURL) {
+                const img = new Image();
+                img.src = imgURL
+                img.onerror = function() {
+                  layer.msg("您选择的文件有误，请重新选择!",{
+                      icon:5
+                    })
+                }
+                img.onload = function() {
+                     $('.avatar').attr('src',imgURL);
+                }
+            }
+        })
+
+        let editForm = document.querySelector('#editForm');
+        //监听提交
+        form.on('submit(editinfo)',function (data) {
+           let formData = new FormData(editForm);
+           <!--if(data.field===''||data.field === null){-->
+               <!--formData.set('avatar','<%='C:/Users/实验室/Desktop/blog/nodeBlog/public/img/'+avatar%>');-->
+           <!--}-->
+            $.ajax({
+                type:'post',
+                dataType:'json',
+                url:'/userinfo/editinfo',
+                contentType: false,    //不可缺
+                processData: false,    //不可缺
+                data:formData,
+                success:function (result) {
+                    if(result === "修改成功！"){
+                        layer.msg(result,{
+                            icon:6
+                        });
+                        setTimeout(function () {
+                            top.location.reload();
+                        },1000)
+                    }else if(result === '用户名已被占用'){
+                        layer.msg(result,{
+                            icon:5
+                        })
+                        setTimeout(function () {
+                            window.location.reload();
+                        },1000)
+                    }else {
+                        layer.msg(result,{
+                            icon:5
+                        })
+                    }
+                },
+                error:function (result) {
+                    layer.msg(result,{
+                        icon:5
+                    })
+                }
+            })
+        })
+    });
+</script>
+</body>
+</html>

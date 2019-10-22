@@ -1,0 +1,27 @@
+<div class="layui-card">
+    <div class="layui-card-header">
+        <h2>
+            <a href="/app/<%=article._id%>"><%=article.title%></a>
+        </h2>
+        <p>发布于: <span><%=article.createdAt%></span></p>
+    </div>
+    <div class="layui-card-body">
+        <a href="/app/<%=article._id%>"><%=article.content%></a>
+    </div>
+    <hr>
+    <div class="layui-card-footer">
+        <div class="layui-row">
+            <div class="layui-col-md3">
+                <div class="view-time">
+                    <span>浏览<span><%=article.pv%></span>次</span>
+                </div>
+            </div>
+            <div class="layui-col-md2 layui-col-md-offset7">
+                <div class="comment-tool">
+                    <span class="layui-icon layui-icon-reply-fill leave-message"></span>
+                    <span class="layui-icon layui-icon-share message-share"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>node_blog</title>
+    <link rel="stylesheet" href="/frame/layui/css/layui.css">
+    <style>
+        body{
+            padding-bottom: 100px;
+        }
+        .layui-card-body{
+            padding-top: 30px;
+        }
+    </style>
+</head>
+<body >
+<fieldset class="layui-elem-field layui-field-title">
+    <legend>网站设置</legend>
+</fieldset>
+<div class="layui-card">
+    <div class="layui-card-body">
+        <form class="layui-form" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">网站名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name"  placeholder="请输入网站名称" autocomplete="off" class="layui-input" value="Node Blog">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">网站域名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="domain" placeholder="请输入网站域名" autocomplete="off" class="layui-input" value="http://localhost:3002">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">首页标题</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" placeholder="请输入首页标题" autocomplete="off" class="layui-input" value="Node Blog">
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">META关键词</label>
+                <div class="layui-input-block">
+                    <textarea name="desc" placeholder="请输入META关键词" class="layui-textarea" >Node Blog</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">META描述</label>
+                <div class="layui-input-block">
+                    <textarea name="desc" placeholder="请输入META描述" class="layui-textarea">node 博客开发</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item layui-form-text">
+                <label class="layui-form-label">版权信息</label>
+                <div class="layui-input-block">
+                    <textarea name="desc" placeholder="请输入版权信息" class="layui-textarea">@2019ZZULI mx</textarea>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="/frame/layui/layui.js"></script>
+<script>
+    //JavaScript代码区域
+    layui.use(['element','jquery'], function(){
+        var element = layui.element;
+         var $ = layui.jquery;
+        let iframe= window.parent.document.getElementById('iframe');
+        iframe.style.height=document.body.clientHeight +'px';
+
+    });
+</script>
+</body>
+</html>
