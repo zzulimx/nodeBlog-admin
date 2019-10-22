@@ -1,0 +1,62 @@
+#lay-body{
+    height: 100%;
+    background-color: #f2f2f2;
+}
+#frame_wrapper{
+    width: 98%;
+    height: 100%;
+    padding: 20px;
+}
+.form-admin-info{
+    margin-top: 20px;
+    margin-left: -40px;
+}
+.layui-nav-item .layui-icon{
+    margin-right: 8px;
+}
+.layui-footer{
+    z-index: 999;
+}
+.android_nav{
+    display: none;
+}
+@media screen and (max-width: 480px) {
+    .layui-footer{
+      display: none;
+    }
+    .layui-layout-admin .layui-side{
+       width: 0;
+        transition: width .5s ease-in-out;
+    }
+    .layui-body{
+        left: 0;
+    }
+    #frame_wrapper {
+        padding: 6px;
+    }
+    .layui-nav.layui-layout-left{
+        display: none;
+    }
+    .layui-logo{
+        display: none;
+    }
+    .android_logo{
+        width: 150px;
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        line-height: 60px;
+        color: #009688;
+        font-size: 16px;
+    }
+    .android_logo .layui-icon{
+        display: inline-block;
+        padding: 0 10px;
+        font-size: 22px;
+
+    }
+    .android_nav{
+        display: block;
+    }
+}
