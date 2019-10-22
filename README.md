@@ -4,3 +4,11 @@
 ## 登录界面
 
 ![image](https://github.com/zzulimx/nodeBlog-admin/blob/master/rendering/login.png)
+
+## 网站设置 
+
+![image](https://github.com/zzulimx/nodeBlog-admin/blob/master/rendering/home.png)
+
+## 登录日志 左侧菜单栏展示
+
+![image](https://github.com/zzulimx/nodeBlog-admin/blob/master/rendering/log.png)
